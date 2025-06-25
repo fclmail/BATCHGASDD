@@ -473,17 +473,14 @@
         const gasLimitInput = parseInt(document.getElementById("gasLimit")?.value) || 1000000;
         const contractUSDCBefore = await getContractUSDCBalance();
         log(`⚡ Executing arbitrage for ${symbol} (${profitPct.toFixed(2)}%), batch: ${batchAmount}...`);
-
         for (let i = 0; i < batchAmount; i++) {
-          const tx = await contract.executeArbitrage(
-            buyRouter,
-            sellRouter,
-            token,
-            amountIn,
-            true, // isToken0 - adjust if needed
-            "DODO", // flash loan provider - adjust if needed
-            { gasLimit: gasLimitInput }
-          );
+        const tx = await contract.executeFlashLoan(
+        amountIn,
+        buyRouter,
+        sellRouter,
+        token,
+         { gasLimit: gasLimitInput }
+         );
           log(`Transaction sent: ${tx.hash} (batch ${i + 1}/${batchAmount})`);
           await tx.wait();
         }
